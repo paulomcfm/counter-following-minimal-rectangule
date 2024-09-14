@@ -13,6 +13,8 @@ namespace ProcessamentoImagens
     {
         private Image image;
         private Bitmap imageBitmap;
+        private Image thinnedImage;
+        private Image counteredImage;
 
         public frmPrincipal()
         {
@@ -37,88 +39,35 @@ namespace ProcessamentoImagens
             pictBoxImg2.Image = null;
         }
 
-        private void btnLuminanciaSemDMA_Click(object sender, EventArgs e)
+        private void btnZhangSuen_Click(object sender, EventArgs e)
         {
             Bitmap imgDest = new Bitmap(image);
             imageBitmap = (Bitmap)image;
-            Filtros.convert_to_gray(imageBitmap, imgDest);
+            Filtros.zhangSuen(imageBitmap, imgDest);
             pictBoxImg2.Image = imgDest;
+            thinnedImage = imgDest;
+            //frmResult frmResult = new frmResult((Bitmap)pictBoxImg2.Image, "Zhang Suen");
+            //frmResult.Show();
+            string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ZhangSuenResult.png");
+            imgDest.Save(savePath, ImageFormat.Png);
         }
 
-        private void btnLuminanciaComDMA_Click(object sender, EventArgs e)
+        private void btnCounterFollowing_Click(object sender, EventArgs e)
         {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.convert_to_grayDMA(imageBitmap, imgDest);
+            Bitmap imgDest = new Bitmap(image.Width, image.Height);
+            using (Graphics g = Graphics.FromImage(imgDest))
+            {
+                g.Clear(Color.White);
+            }
+            pictBoxImg1.Image = thinnedImage;
+            Filtros.counterFollowing((Bitmap)thinnedImage, imgDest);
             pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnNegativoSemDMA_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.negativo(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnNegativoComDMA_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.negativoDMA(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnEspHorSDMA_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.espelharHorizontal(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnEspHorCDMA_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.espelharHorizontalDMA(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnRot90SDMA_Click(object sender, EventArgs e)
-        {
-            int width = image.Width;
-            int height = image.Height;
-            Bitmap imgDest = new Bitmap(height,width);
-            imageBitmap = (Bitmap)image;
-            Filtros.rotacao90graus(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnRot90CMDA_Click(object sender, EventArgs e)
-        {
-            int width = image.Width;
-            int height = image.Height;
-            Bitmap imgDest = new Bitmap(height, width);
-            imageBitmap = (Bitmap)image;
-            Filtros.rotacao90graus(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnSegmentarObjetos_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.segmentarObjetos(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
-        }
-
-        private void btnSegmentarObjetosDMA_Click(object sender, EventArgs e)
-        {
-            Bitmap imgDest = new Bitmap(image);
-            imageBitmap = (Bitmap)image;
-            Filtros.segmentarObjetosDMA(imageBitmap, imgDest);
-            pictBoxImg2.Image = imgDest;
+            counteredImage = imgDest;
+            pictBoxImg1.Image = thinnedImage;
+            frmResult frmResult = new frmResult((Bitmap)pictBoxImg2.Image, "Counter Following");
+            frmResult.Show();
+            string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CounterFollowingResult.png");
+            imgDest.Save(savePath, ImageFormat.Png);
         }
     }
 }
